@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Manager Access</title>
+<!--
+<style>
+.one
+{
+	height:100%;
+	width:20%;
+}
+.two
+{
+	height:100%;
+	width:80%;
+}
+</style>
+-->
+		<link href="iframes.css" rel="stylesheet" type="type/css">
+</head>
+<body>
+		<iframe src="pages/header_page.html" name="header" class="one"></iframe>
+<iframe  name="first" src="pages/frameOne.html" class="two"></iframe>
+<iframe name="second" class="three"></iframe>
+
+</body>
+</html>

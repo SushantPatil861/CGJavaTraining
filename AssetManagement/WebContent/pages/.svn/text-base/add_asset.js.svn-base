@@ -1,0 +1,17 @@
+function getCatIt(){
+var select=document.getElementById('rit').value;
+
+if(select=="it")
+{
+document.getElementById('sel').innerHTML="<option value='Desktop'>Desktop</option>"+"<option value='Projector'>Projector</option>"+"<option value='Printer'>Printer</option>"+"<option value='LAN Cable'>LAN Cable</option>"+"<option value='Mobile Phone'>Mobile</option>";
+}
+}
+
+function getCatNIt(){
+var select=document.getElementById('rnit').value;
+
+if(select=="nit")
+{
+document.getElementById('sel').innerHTML="<option value='classrooom'>Classroom</option>"+"<option value='desk'>Desk</option>"+"<option value='chair'>Chair</option>"+"<option value='hall'>Conference Hall</option>";
+}
+}

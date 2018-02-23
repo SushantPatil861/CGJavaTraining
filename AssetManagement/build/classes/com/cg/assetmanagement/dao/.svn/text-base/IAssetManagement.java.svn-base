@@ -1,0 +1,63 @@
+package com.trg.asset.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.trg.asset.dto.AllocationDetails;
+import com.trg.asset.dto.Asset;
+import com.trg.asset.dto.Employee;
+import com.trg.asset.dto.UserMaster;
+import com.trg.asset.exception.AssetException;
+
+public interface IAssetManagement {
+	// Add Asset
+	public int addAsset(Asset asset);
+
+	// Update Asset
+	public boolean updateAsset(Asset asset, int assetId);
+
+	// Delete Asset
+	public int delAssetById(int assetId) throws AssetException;
+
+	// View Allocated
+	public ArrayList<AllocationDetails> viewAllocated();
+
+	// View Unallocated
+	public ArrayList<Asset> viewUnallocated();
+
+	// Raise request
+	public String raiseRequest(AllocationDetails obj) throws AssetException;
+
+	// Validate User
+	UserMaster validateUser(UserMaster userMaster);
+
+	// Get Request By Id
+	AllocationDetails getRequestById(String requestId);
+
+	// Get All Assets
+	public List<Asset> getAllAssets();
+
+	// Get Asset By Id
+	public Asset getAssetById(int assetId) throws AssetException;
+
+	// Get Employees By MgrCode
+	public List<Employee> getEmployeeUnderManager(int mgrCode);
+
+	// Accept request
+	public int acceptRequest(AllocationDetails obj);
+
+	// Deny Request
+	public void denyRequest(AllocationDetails obj);
+
+	// View Request Status
+	public List<AllocationDetails> viewStatus(int managerId);
+
+	// View Requests
+	public List<AllocationDetails> viewRequests();
+
+	// Get Employee
+	public Employee getEmployeeById(int employeeId);
+
+	// Get Admin
+	public Employee getAdminById(String userId);
+}

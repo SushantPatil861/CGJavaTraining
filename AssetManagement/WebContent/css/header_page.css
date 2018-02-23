@@ -1,0 +1,21 @@
+body
+{
+text-align:center;
+background-color:#dddddd;
+}
+th#title{
+font-size:50px;
+font-family:"Constantia"
+}
+table{
+margin-left:25%
+}
+img#headerimg{
+	height:60px;
+}
+img#logo{
+	height:80px;
+	
+	
+
+}

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>page2</title>
+	 <link rel="stylesheet" href="style.css">
+	 <script src="myScript.js"></script>
+</head>
+<body>
+<a href="index.html"><input type="submit" value="Back"></a><br><br>
+	<div class="Allocated">
+		<input type="submit" value="Allocated" onclick="shAllocated()"><br><br>
+		<div id="allocated">
+			<table border=2>
+	  			<tr>
+	    			<th>sr.no</th>
+	    			<th>resource</th>
+	    			<th>id</th>
+	    			<th>Date of issue</th>
+	  			</tr>
+	  			<tr>
+	    			<td>1</td>
+	    			<td>Laptop</td>
+	    			<td>110</td>
+	    			<td>21/08/16</td>
+	  			</tr>
+	  		</table>
+	  	</div>
+	</div>
+	<div class="Unallocated">
+		<input type="submit" value="Unallocated" onclick="shUnallocated()"><br><br>
+		<div id="unallocated">
+			<table border=2>
+	  			<tr>
+	    			<th>sr.no</th>
+	    			<th>resource</th>
+	    			<th>id</th>
+	  			</tr>
+	  			<tr>
+	    			<td>1</td>
+	    			<td>Laptop</td>
+	    			<td>110</td>
+	  			</tr>
+	  		</table>
+	  	</div>
+	</div>
+</body>
+</html>

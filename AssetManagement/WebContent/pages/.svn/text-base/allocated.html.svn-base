@@ -1,0 +1,21 @@
+<body onLoad="shAllocated()">
+<div class="Allocated">
+		
+		<div id="allocated">
+			<table border=2>
+	  			<tr>
+	    			<th>sr.no</th>
+	    			<th>resource</th>
+	    			<th>id</th>
+	    			<th>Date of issue</th>
+	  			</tr>
+	  			<tr>
+	    			<td>1</td>
+	    			<td>Laptop</td>
+	    			<td>110</td>
+	    			<td>21/08/16</td>
+	  			</tr>
+	  		</table>
+	  	</div>
+	</div>
+</body>

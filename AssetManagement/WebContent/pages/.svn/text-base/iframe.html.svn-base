@@ -1,0 +1,13 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Index</title>
+		<link href="iframes.css" rel="stylesheet" type="type/css">
+		</link>
+	</head>
+	<body >
+		<iframe class="one" src="header_page.html"  name="header" frameborder="0" seamless="seamless"></iframe>
+		<iframe class="two" src="admin_menu.html" name="sidemenu" frameborder="0" seamless="seamless"></iframe>
+		<iframe class="three" src=""  name="content" frameborder="0" seamless="seamless"></iframe>
+	</body>
+</html>	

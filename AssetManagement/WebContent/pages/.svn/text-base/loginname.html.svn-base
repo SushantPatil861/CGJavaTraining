@@ -1,0 +1,37 @@
+<HTML>
+<HEAD>
+<script language="javascript">
+function check()
+{
+
+	if(myform.jname.value && myform.pass.value)
+	{
+		var jname=document.getElementById("jname").value;
+		document.write("Welcome"+jname);
+		document.location.href="addasset.html";
+	}  
+	else{
+		alert("Denied");
+	}
+	
+}
+</script>
+</HEAD>
+<BODY>
+
+<form name="myform" align="center" method="post">
+<table>
+<tr>
+		<td>Username</td>
+		<td><input type="text" name="jname" id="jname"></td>
+	</tr>
+	<tr>
+		<td>Password</td>
+		<td><input type="password" name="pass" /></td>
+	</tr>
+<tr>
+<td><input type="button" onClick="check()" value="login"/></td></tr>
+</table>
+</form>
+</BODY>
+</HTML>

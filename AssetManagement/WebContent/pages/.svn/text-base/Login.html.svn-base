@@ -1,0 +1,40 @@
+<html><title>Login
+</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="w3.css">
+<link href="login.css" REL="stylesheet" type="text/css"/>
+<link href="style1.css" REL="stylesheet" type="text/css"/>
+<body>
+<header>
+<iframe src="pages/header_page.html"  name="header" width="100%" style="height:12%"></iframe>
+</header>
+<div width="100%" style="height:1%;background-color:RGB(23,90,165)"></div>
+<div class="w3-row">
+<div class="w3-col" style="width:100%;padding-top:10%;height:85%">
+<center>
+<form method="POST" action="LoginCheck">
+<fieldset>
+<legend><div class="w3-tag w3-blue" style="font-size:35;border-radius:3px">LOGIN</div></legend>
+<br>
+<table cellspacing="20px">
+<tr>
+<td>UserID</td>
+<td>: <input type="text" name="txtUid" pattern="[AM]{1}[0-9]{5}" required="required"/></td>
+</tr>
+<tr>
+<td>Password</td>
+<td>: <input type="password" name="txtPwd" pattern="[A-Za-z0-9]{8,50}" required="required"/></td>
+</tr>
+</table>
+<input class="btn btn-1 btn-1a" type="submit" value="Login"/>
+<br>
+</fieldset>
+</form>
+</center>
+</div>
+</div>
+<footer class="w3-container w3-grey" style="text-align:right">
+Copyright&copy; All rights reserved&reg;
+</footer>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<html>
+<head><title></title>
+<script src=validateadd.js></script>
+</head>
+<body>
+<form action="" name="abc" method"post" onSubmit="validateadd()">
+<table border=1 align="center">
+<caption><h2>Add Asset<h2></caption>
+<tr><td>
+<table border=1>
+<tr>
+<td>Department<br/>
+<select name=depart>
+<option>Select</option>
+<option></option>
+<option></option>
+<option></option>
+<option></option>
+</select>
+</td>
+<td>Tag<br/>
+<input type=text name=tag required/>
+</td>
+<td>Model Number<br/>
+<input type=text name=model required/>
+</td>
+<td>Serial<br/>
+<input type=text name=serial required/>
+</td>
+</tr>
+<tr>
+<td colspan="2">Location<br/>
+<input type=text name=location required/>
+</td>
+<td>Manufacturer<br/>
+<input type=text name=manufac required/>
+</td>
+<td>Purchase supplier<br/>
+<select name=purchase>
+<option>Select</option>
+<option></option>
+<option></option>
+<option></option>
+<option></option>
+</select></td>
+</tr>
+<tr>
+<td colspan="2">Description<br/>
+<input type=text name=desc required/></td>
+<td>Category<br/>
+<select name=cate>
+<option>Select</option>
+<option></option>
+<option></option>
+<option></option>
+<option></option>
+</select>
+</td>
+<td>Subcategory<br/>
+<select name=subcate>
+<option>Select</option>
+<option></option>
+<option></option>
+<option></option>
+<option></option>
+</select></td>
+</tr>
+<tr>
+<td colspan="2">Purchase Cost<br/>
+<input type=text name="cost" pattern="[0-9]{1,20}" title="Enter value in digits" required/>
+</td> 
+<td>Purchase Date<br/>
+<input type="date" name="date" required/>
+</td>
+<td>
+Lifespan<br/>
+<input type=date name=life required/>
+</td>
+</tr>
+</table>
+</td></tr>
+<tr>
+<td colspan="4">
+<button type="Submit" name="submit" >Submit Information</button>
+<button type="reset" name="Clear">Clear</button>
+</td>
+
+</tr>
+</table> 
+</body>
+</html>

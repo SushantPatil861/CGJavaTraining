@@ -1,0 +1,50 @@
+<html>
+<head><title></title>
+<script>
+function check(it){
+tr=it.parentElement.parentElement;
+tr.style.backgroundColor=(it.checked) ? "gold":"white";
+}
+</script>
+<stytle type="text/css">
+
+</style>
+</head>
+<body>
+
+<form action="" name="delete" method"post" >
+<table border=1 align="center">
+<caption><h2>Delete Asset<h2></caption>
+<tr><td>
+<table border=1>
+<tr>
+<th>Department</th>
+<th>Tag</th>
+<th>Model Number</th>
+<th>Category</th>
+<th>PurchaseCost</th>
+<th>PurchaseDate</th>
+<th>Delete Asset</th>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><input type="checkbox"  name="delete" onClick="check(this)"></td>
+
+</tr>
+
+<tr>
+<td colspan="7">
+<button type="Submit" name="submit" align=center>Delete Asset</button>
+<button type="reset" name="Clear">Clear</button>
+</td>
+
+</tr>
+</table> 
+
+</body align=center>
+</html>

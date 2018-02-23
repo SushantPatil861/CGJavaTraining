@@ -1,0 +1,12 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Header Page</title>
+		<link href="header_page.css" rel="stylesheet" type="text/css"/>
+	</head>
+	<body bgcolor="#eeeeee" align="center">
+
+	<img  id="logo" src="logo.png">
+	<img  id="headerimg" src="asset management header.png">
+	</body>
+</html>	

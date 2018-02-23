@@ -1,0 +1,10 @@
+body{
+background-color:orange;
+}
+div{
+text-align:center;
+background-color:yellow;
+border:2px;
+border-style:dotted;
+border-radius:20px;
+}

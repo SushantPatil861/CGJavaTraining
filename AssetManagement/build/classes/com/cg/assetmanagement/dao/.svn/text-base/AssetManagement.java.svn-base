@@ -1,0 +1,912 @@
+package com.trg.asset.dao;
+
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
+
+import org.apache.log4j.PropertyConfigurator;
+
+import com.trg.asset.dto.AllocationDetails;
+import com.trg.asset.dto.Asset;
+import com.trg.asset.dto.Employee;
+import com.trg.asset.dto.UserMaster;
+import com.trg.asset.exception.AssetException;
+import com.trg.asset.util.DBUtil;
+
+public class AssetManagement implements IAssetManagement {
+	static {
+		PropertyConfigurator.configure("log4j.properties");
+	}
+	static Logger myLog = Logger.getLogger(AssetManagement.class);
+
+	/***********************************************************
+	 * Method Name:updateAsset(Asset asset, int assetId) Return type:String
+	 * Parameters:Object of type Asset,assetId of type integer Description:This
+	 * method returns boolean
+	 * 
+	 * @author pshandi1
+	 ***********************************************************/
+	@Override
+	// Update Asset
+	public boolean updateAsset(Asset asset, int assetId) {
+		myLog.info("Updating particular Asset by Id" + assetId);
+		System.out.println("" + asset + assetId);
+		LocalDate dt1 = asset.getPurchaseDate();
+		Date purchaseSQL = Date.valueOf(dt1);
+		Connection connection = DBUtil.getConnection();
+		PreparedStatement upPst = null;
+		String sql = "UPDATE asset_master SET asset_name=?,purchase_date=?,purchaseprice=? , assettype=?,category=? ,asset_des=?,qty=? WHERE AssetId=? ";
+		try {
+			upPst = connection.prepareStatement(sql);
+			upPst.setString(1, asset.getAssetName());
+			upPst.setDate(2, purchaseSQL);
+			upPst.setFloat(3, asset.getPurchasePrice());
+			upPst.setString(4, asset.getAssetType());
+			upPst.setString(5, asset.getCategory());
+			upPst.setString(6, asset.getAssetDes());
+			upPst.setInt(7, asset.getQuantity());
+			upPst.setInt(8, assetId);
+
+			int rows = upPst.executeUpdate();
+			myLog.info("Update Query is fired");
+			System.out.println(rows);
+			if (rows > 0) {
+				//System.out.println("Updation done");
+				myLog.info("Updation is successfully done");
+				return true;
+			} else {
+				//System.out.println("Updation failed");
+				myLog.info("Updation is successfully done");
+				return false;
+			}
+		} catch (SQLException e) {
+			myLog.error(e.getMessage());
+			e.printStackTrace();
+			return false;
+		} finally {
+
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				myLog.error(e.getMessage());
+				e.printStackTrace();
+				return false;
+			}
+		}
+	}
+
+	/***********************************************************
+	 * Method Name:addAsset(Asset asset) Return type:Integer Parameters:Object
+	 * of type Asset Description:This method returns assetId
+	 * 
+	 * @author Shruti
+	 ***********************************************************/
+	// Add Asset
+	public int addAsset(Asset asset) {
+		myLog.info("Adding asset details to DataBase");
+		String seqQuery = "SELECT asset_id_seq.NEXTVAL FROM DUAL";
+		Date purchaseSQL = Date.valueOf(asset.getPurchaseDate());
+		String insQuery = "INSERT INTO asset_master VALUES(?,?,?,?,?,?,?,?)";
+		int insRows = -1;
+		Connection connection = null;
+		PreparedStatement insPst = null;
+		Statement seqSt = null;
+		ResultSet seqRs = null;
+		int assetId = -1;
+		try {
+			connection = com.trg.asset.util.DBUtil.getConnection();
+			seqSt = connection.createStatement();
+			seqRs = seqSt.executeQuery(seqQuery);
+			if (seqRs.next()) {
+				assetId = seqRs.getInt(1);
+				asset.setAssetId(assetId);
+				insPst = connection.prepareStatement(insQuery);
+				insPst.setInt(1, asset.getAssetId());
+				insPst.setString(2, asset.getAssetName());
+				insPst.setDate(3, purchaseSQL);
+				insPst.setFloat(4, asset.getPurchasePrice());
+				insPst.setString(5, asset.getAssetType());
+				insPst.setString(6, asset.getCategory());
+				insPst.setString(7, asset.getAssetDes());
+				insPst.setInt(8, asset.getQuantity());
+
+				insRows = insPst.executeUpdate();
+				myLog.info("Insert Query is Fired");
+				if (insRows > 0){
+					System.out.println("Insertion success");
+				myLog.info("Added asset with Id"+assetId+"in the Database successfully");
+				}
+				else{
+					System.out.println("Insertion failed");
+					myLog.info("Asset insertion failed");
+				}
+				}
+		} catch (SQLException e) {
+			myLog.error(e.getMessage());
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+
+		} finally {
+			try {
+				insPst.close();
+				connection.close();
+			} catch (SQLException e) {
+				myLog.error(e.getMessage());
+				e.printStackTrace();
+			}
+
+		}
+
+		return assetId;
+
+	}
+
+	/***********************************************************
+	 * Method Name: delAssetById(int assetId) Return type:Integer Parameters:
+	 * asset type of Integer Description:This method returns assetId
+	 * 
+	 * @author geetika
+	 ***********************************************************/
+	@Override
+	// Delete Asset By ID
+	public int delAssetById(int assetId) throws AssetException {
+		
+		myLog.info("Deleting asset with Id"+assetId);
+
+		Connection connection = DBUtil.getConnection();
+
+		String sql = "DELETE FROM asset_master WHERE assetid=?";
+
+		int rows = 0;
+		try {
+
+			PreparedStatement pst = connection.prepareStatement(sql);
+			pst.setInt(1, assetId);
+
+			rows = pst.executeUpdate();
+			myLog.info("Delete Query Fired");
+
+			if (rows != 0) {
+				System.out.println("Deletion done");
+			} else {
+				System.out.println("Deletion failed");
+			}
+		} catch (SQLException e) {
+			myLog.error(e.getMessage());
+
+			e.printStackTrace();
+		} finally {
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				myLog.error(e.getMessage());
+				e.printStackTrace();
+			}
+		}
+
+		return rows;
+	}
+
+	/***********************************************************
+	 * Method Name: viewAllocated Return type:List<AllocationDetails Parameters:
+	 * void Description:This method returns list of assets which are allocatedd
+	 * 
+	 * @author pratik
+	 ***********************************************************/
+	@Override
+	// View Allocated Asset
+	public ArrayList<AllocationDetails> viewAllocated() {
+		myLog.info("Displaying all the Allocated Assets");
+
+		ArrayList<AllocationDetails> allocated = new ArrayList<AllocationDetails>();
+		String selQuery = "SELECT allocation_id, assetId,allocation_date, empNo, requestId FROM asset_allocation";
+		Statement st = null;
+		ResultSet rs = null;
+		Connection connection = null;
+
+		try {
+			connection = DBUtil.getConnection();
+			st = connection.createStatement();
+			rs = st.executeQuery(selQuery);
+			myLog.info("Select query fired to display all Allocated Assets");
+
+			while (rs.next()) {
+				AllocationDetails details = new AllocationDetails();
+				details.setAllocationId(rs.getInt("allocation_id"));
+				details.setRequestId(rs.getString("requestId"));
+				details.setEmployeeId(rs.getInt("empno"));
+				details.setAssetId(rs.getInt("assetId"));
+				details.setAllocationDate(rs.getDate("allocation_date")
+						.toLocalDate());
+
+				allocated.add(details);
+			}
+		} catch (SQLException e) {
+			myLog.error(e.getMessage());
+			e.printStackTrace();
+		}
+
+		return allocated;
+	}
+
+	/***********************************************************
+	 * Method Name: viewUnallocated Return type:List<AllocationDetails
+	 * Parameters: void Description:This method returns list of assets which are
+	 * Unallocated
+	 * 
+	 * @author pratik
+	 ***********************************************************/
+	@Override
+	// View Unallocated Asset
+	public ArrayList<Asset> viewUnallocated() {
+		myLog.info("Displaying all the Unallocated Assets");
+
+		ArrayList<Asset> unAllocated = new ArrayList<Asset>();
+		String selQuery = "SELECT assetid, asset_name, purchase_date, purchaseprice, assettype, category,asset_des, qty FROM asset_master WHERE qty>0";
+		Statement st = null;
+		ResultSet rs = null;
+		Connection connection = null;
+
+		try {
+			connection = DBUtil.getConnection();
+			st = connection.createStatement();
+			rs = st.executeQuery(selQuery);
+			myLog.info("Select query fired to display all Unallocated Assets");
+
+			while (rs.next()) {
+				Asset asset = new Asset();
+				asset.setAssetId(rs.getInt("assetid"));
+				asset.setAssetName(rs.getString("asset_name"));
+				asset.setPurchaseDate(rs.getDate("purchase_date").toLocalDate());
+				asset.setPurchasePrice(rs.getFloat("purchaseprice"));
+				asset.setAssetType(rs.getString("assettype"));
+				asset.setCategory(rs.getString("category"));
+				asset.setAssetDes(rs.getString("asset_des"));
+				asset.setQuantity(rs.getInt("qty"));
+
+				unAllocated.add(asset);
+			}
+		} catch (SQLException e) {
+			myLog.error(e.getMessage());
+			e.printStackTrace();
+		}
+
+		return unAllocated;
+	}
+
+	/***********************************************************
+	 * Method Name: Validate User Return type:object of type UserMaster
+	 * Parameters: object of type UserMaster Description:This method returns
+	 * user object if current userName and password of user object exist in the
+	 * database.
+	 * 
+	 * @author Amar
+	 ***********************************************************/
+	/* *************************Validate User************** */
+	@Override
+	public UserMaster validateUser(UserMaster userMaster) {
+		myLog.info("Validating User");
+
+		Connection connection = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		String qry = "SELECT userId, user_name, user_pw, user_type, empno FROM user_master WHERE userId=?";
+		try {
+			connection = DBUtil.getConnection();
+			pst = connection.prepareStatement(qry);
+			pst.setString(1, userMaster.getUserId());
+			rs = pst.executeQuery();
+			myLog.info("Select query fried");
+
+			if (rs.next()) {
+				if (userMaster.getUserPassword()
+						.equals(rs.getString("user_pw"))) {
+					userMaster.setUserName(rs.getString("user_name"));
+					userMaster.setUserType(rs.getString("user_type"));
+					userMaster.setEmployeeId(rs.getInt("empno"));
+				}
+			}
+		} catch (SQLException e) {
+			myLog.error(e.getMessage());
+
+			e.printStackTrace();
+		}
+		return userMaster;
+	}
+
+	/***********************************************************
+	 * Method Name: raiseRequest Return type: String Parameters: object of type
+	 * AllocationDetails Description:This method returns request Id if current
+	 * userName and password combination of user object exist in the database.
+	 * 
+	 * @author pshandi1
+	 ***********************************************************/
+	
+	/* *************************Raise Request************** */
+	@Override
+	public String raiseRequest(AllocationDetails obj) throws AssetException {
+		myLog.info("Raising Request to allocate asset to a particular employee");
+
+		Connection connection = null;
+		PreparedStatement inspstmt = null;
+		Statement stmt = null;
+
+		ResultSet rs = null;
+		ResultSet seqRs = null;
+		int reqId = 0;
+		int quantity = 0;
+
+		String requestId = "";
+		String seqQuery = "SELECT req_seq.NEXTVAL FROM DUAL";
+		String sqlquantity = "select qty from asset_master where assetId=?";
+		String insertQuery = "INSERT INTO asset_request(requestId,assetId,empno,mgr,requirement,status) VALUES(?,?,?,?,?,?)";
+
+		try {
+			connection = DBUtil.getConnection();
+			stmt = connection.createStatement();
+
+			seqRs = stmt.executeQuery(seqQuery);
+
+			inspstmt = connection.prepareStatement(sqlquantity);
+			inspstmt.setInt(1, obj.getAssetId());
+
+			rs = inspstmt.executeQuery();
+			
+			if (rs.next()) {
+				quantity = rs.getInt(1);
+			}
+			if (quantity > 0) {
+				if (seqRs.next()) {
+					reqId = seqRs.getInt(1);
+
+					System.out.println(obj);
+					requestId = "REQ" + reqId;
+					inspstmt = connection.prepareStatement(insertQuery);
+					inspstmt.setString(1, requestId);
+					inspstmt.setInt(2, obj.getAssetId());
+					inspstmt.setInt(3, obj.getEmployeeId());
+					inspstmt.setInt(4, obj.getManagerId());
+					inspstmt.setString(5, obj.getRequirement());
+					inspstmt.setString(6, obj.getStatus());
+					// inspstmt.setString(7, obj.getUserId());
+
+					int insRows = inspstmt.executeUpdate();
+					myLog.info("Insert query Fired to raise request for asset allocation");
+
+					System.out.println("RequestAsset InsRows: " + insRows);
+				} else {
+					requestId = "";
+				}
+
+			}
+		} catch (SQLException e) {
+			myLog.error(e.getMessage());
+
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		} finally {
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				myLog.error(e.getMessage());
+				e.printStackTrace();
+			}
+		}
+
+		return requestId;
+	}
+	/***********************************************************
+	 * Method Name: getRequestById Return type: AllocationDetails Parameters:
+	 * String Description:This method returns object of allocationDetails based
+	 * on the requestid provided as argument
+	 * 
+	 * @author pratiksha
+	 ***********************************************************/
+	/* ****************************getRequestById***************************** */
+	@Override
+	public AllocationDetails getRequestById(String requestId) {
+		myLog.info("Fetching Request by Id");
+
+		String sql = "SELECT requestId,assetId,empno,mgr,status FROM asset_request WHERE requestId=?";
+		Connection connection = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		AllocationDetails obj = null;
+		try {
+			connection = DBUtil.getConnection();
+			pst = connection.prepareStatement(sql);
+			pst.setString(1, requestId);
+
+			rs = pst.executeQuery();
+			myLog.info("Select Query Fired to get asset request by Id");
+
+			if (rs.next()) {
+				obj = new AllocationDetails();
+				obj.setRequestId(rs.getString("requestId"));
+				obj.setAssetId(rs.getInt("assetId"));
+				obj.setEmployeeId(rs.getInt("empno"));
+				obj.setManagerId(rs.getInt("mgr"));
+				obj.setStatus(rs.getString("status"));
+
+			}
+		} catch (SQLException e) {
+			myLog.error(e.getMessage());
+
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		} finally {
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				myLog.error(e.getMessage());
+				e.printStackTrace();
+			}
+		}
+		return obj;
+	}
+
+	/***********************************************************
+	 * Method Name: getAllAssets Return type: List<Asset> Parameters: void
+	 * Description:This method returns List of objects of Asset
+	 * 
+	 * @author pshandi1
+	 ***********************************************************/
+	/* ****************************getAllAssets***************************** */
+	@Override
+	public List<Asset> getAllAssets() {
+		myLog.info("Displaying all Assets present in the Database");
+
+		ArrayList<Asset> assetList = new ArrayList<Asset>();
+		String selQuery = "SELECT * FROM asset_master";
+		Statement st = null;
+		ResultSet rs = null;
+		Connection connection = null;
+
+		try {
+			connection = DBUtil.getConnection();
+			st = connection.createStatement();
+			rs = st.executeQuery(selQuery);
+			myLog.info("Select query Fired to retrieve all assets present");
+
+			while (rs.next()) {
+				Asset asset = new Asset();
+				asset.setAssetId(rs.getInt("assetid"));
+				asset.setAssetName(rs.getString("asset_name"));
+				asset.setAssetType(rs.getString("assettype"));
+				asset.setCategory(rs.getString("category"));
+				asset.setPurchaseDate(rs.getDate("purchase_date").toLocalDate());
+				asset.setPurchasePrice(rs.getFloat("purchaseprice"));
+				asset.setQuantity(rs.getInt("qty"));
+				asset.setAssetDes(rs.getString("asset_Des"));
+
+				assetList.add(asset);
+			}
+		} catch (SQLException e) {
+			myLog.error(e.getMessage());
+			e.printStackTrace();
+		}
+
+		return assetList;
+	}
+
+	/***********************************************************
+	 * Method Name: getAssetById Return type: object of type Asset Parameters:
+	 * Integer Description:This method returns object of Asset based on argument
+	 * passed as asset Id
+	 * 
+	 * @author pshandi1
+	 ***********************************************************/
+	/* ****************************getAssetById***************************** */
+	@Override
+	public Asset getAssetById(int assetId) throws AssetException {
+		myLog.info("Select query fried to retrieve all assets present");
+		Asset obj = new Asset();
+		String sql = "SELECT * FROM asset_master WHERE assetId=?";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			connection = DBUtil.getConnection();
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, assetId);
+			rs = ps.executeQuery();
+			myLog.info("Select Query Fired");
+
+			if (rs.next()) {
+				// fetch the details individually
+
+				obj.setAssetId(rs.getInt("assetid"));
+				obj.setAssetName(rs.getString("asset_name"));
+				obj.setAssetType(rs.getString("assettype"));
+				obj.setCategory(rs.getString("category"));
+				obj.setPurchaseDate(rs.getDate("purchase_date").toLocalDate());
+				obj.setPurchasePrice(rs.getFloat("purchaseprice"));
+				obj.setQuantity(rs.getInt("qty"));
+				obj.setAssetDes(rs.getString("asset_Des"));
+			} else {
+				throw new AssetException("Not a valid Asset Id");
+			}
+		} catch (SQLException e) {
+			myLog.error(e.getMessage());
+
+			System.out.println(e.getMessage());
+
+		} finally {
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				myLog.error(e.getMessage());
+				e.printStackTrace();
+			}
+		}
+		return obj;
+	}
+	/***********************************************************
+	 * Method Name: getEmployeeUnderManager Return type: List objects of type
+	 * Employee Parameters: Integer Description:This method returns List of
+	 * object of Employee based on argument passed as Manager Id
+	 * 
+	 * @author pratik
+	 ***********************************************************/
+	// Get Employee Under Manager
+	@Override
+	public List<Employee> getEmployeeUnderManager(int mgrCode) {
+		myLog.info("Displaying Employee for given manager");
+
+		List<Employee> empList = new ArrayList<Employee>();
+		String sql = "SELECT * FROM employee WHERE mgr=?";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			connection = DBUtil.getConnection();
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, mgrCode);
+			rs = ps.executeQuery();
+			myLog.info("Select query fired to display employee");
+
+			while (rs.next()) {
+				// fetch the details individually
+				Employee emp = new Employee();
+				emp.setEmpNo(rs.getInt("empno"));
+				emp.setEmpName(rs.getString("ename"));
+				emp.setDesignation(rs.getString("job"));
+				emp.setMgrCode(rs.getInt("mgr"));
+				emp.setHireDate(rs.getDate("hiredate").toLocalDate());
+				emp.setSalary(rs.getDouble("sal"));
+				emp.setDepartmentId(rs.getInt("deptid"));
+
+				empList.add(emp);
+			}
+		} catch (SQLException e) {
+			myLog.error(e.getMessage());
+
+			System.out.println(e.getMessage());
+
+		} finally {
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				myLog.error(e.getMessage());
+				e.printStackTrace();
+			}
+		}
+		return empList;
+	}
+
+
+	/***********************************************************
+	 * Method Name: acceptRequest 
+	 * Return type:Integer
+	 * Parameters: object of AllocationDetails
+	 * AllocationDetails Description:This method returns integer value as
+	 * allocation id
+	 * 
+	 * @author Amar
+	 ***********************************************************/
+	@Override
+	public int acceptRequest(AllocationDetails obj) {
+		myLog.info("Request raised status updation");
+
+		String allocationSeq = "SELECT allocationSeq.NEXTVAL FROM DUAL";
+		String insQuery = "INSERT INTO asset_allocation VALUES (?,?,?,SYSDATE,?)";
+		String chkQuery = "SELECT qty FROM asset_master WHERE assetid=?";
+		String updQtyQuery = "UPDATE asset_master SET qty = qty-1 WHERE assetid=?";
+		String updStatusQuery = "UPDATE asset_request SET status='Allocated', userId=? WHERE requestid=?";
+		Connection connection = null;
+		Statement seqSt = null;
+		PreparedStatement insPst = null;
+		PreparedStatement chkPst = null;
+		PreparedStatement updQtyPst = null;
+		PreparedStatement updStatusPst = null;
+		ResultSet seqRs = null;
+		ResultSet chkRs = null;
+		int allocationId = 0;
+		try {
+			connection = DBUtil.getConnection();
+			chkPst = connection.prepareStatement(chkQuery);
+			chkPst.setInt(1, obj.getAssetId());
+			chkRs = chkPst.executeQuery();
+			if (chkRs.next()) {
+				int qty = chkRs.getInt(1);
+				if (qty > 0) {
+					seqSt = connection.createStatement();
+					seqRs = seqSt.executeQuery(allocationSeq);
+					if (seqRs.next()) {
+						allocationId = seqRs.getInt(1);
+						insPst = connection.prepareStatement(insQuery);
+						insPst.setInt(1, allocationId);
+						insPst.setString(2, obj.getRequestId());
+						insPst.setInt(3, obj.getAssetId());
+						insPst.setInt(4, obj.getEmployeeId());
+						insPst.executeUpdate();
+						myLog.info("Insert Query Fired to add allocated asset");
+
+						updQtyPst = connection.prepareStatement(updQtyQuery);
+						updQtyPst.setInt(1, obj.getAssetId());
+						updQtyPst.executeUpdate();
+						myLog.info("Update Query Fired to update quantity available");
+
+						updStatusPst = connection
+								.prepareStatement(updStatusQuery);
+						updStatusPst.setString(1, obj.getUserId());
+						updStatusPst.setString(2, obj.getRequestId());
+						updStatusPst.executeUpdate();
+						myLog.info("Update Query Fired to update asset status to allocated");
+
+					}
+				}
+			}
+
+		} catch (SQLException e) {
+			myLog.error(e.getMessage());
+			e.printStackTrace();
+		}
+		return allocationId;
+	}
+	/***********************************************************
+	 * Method Name: denyRequest 
+	 * Return type:void
+	 * Parameters: object of AllocationDetails
+	 * AllocationDetails Description:This method set status as deny. 
+	 * 
+	 * @author Amar
+	 ***********************************************************/
+	/* ****************************denyRequest***************************** */
+	
+	@Override
+	public void denyRequest(AllocationDetails obj) {
+		myLog.info("Request raised status updation");
+		
+		String updStatusQuery = "UPDATE asset_request SET userId=?,status='Denied' WHERE requestid=?";
+		Connection connection = null;
+		PreparedStatement updStatusPst = null;
+		try {
+			connection = DBUtil.getConnection();
+
+			updStatusPst = connection.prepareStatement(updStatusQuery);
+			updStatusPst.setString(1, obj.getUserId());
+			updStatusPst.setString(2, obj.getRequestId());
+			updStatusPst.executeUpdate();
+			myLog.info("Update Query Fired to update asset status to Denied");
+
+		} catch (SQLException e) {
+			myLog.error(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	/* ****************************viewStatus***************************** */
+	/***********************************************************
+	 * Method Name: denyRequest 
+	 * Return type:void
+	 * Parameters: object of AllocationDetails
+	 * AllocationDetails Description:This method set status as deny. 
+	 * 
+	 * @author pratik
+	 ***********************************************************/
+	@Override
+	public List<AllocationDetails> viewStatus(int managerId) {
+		myLog.info("View Status for particular asset");
+
+		String sql = "SELECT requestId,assetId,empno,mgr,status,requirement FROM asset_request WHERE mgr=?";
+		Connection connection = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		AllocationDetails allocationDetails = null;
+		List<AllocationDetails> assetRequestList = new ArrayList<AllocationDetails>();
+
+		try {
+			connection = DBUtil.getConnection();
+			pst = connection.prepareStatement(sql);
+			pst.setInt(1, managerId);
+
+			rs = pst.executeQuery();
+			myLog.info("Select query fired to view status of particular asset");
+			while (rs.next()) {
+				allocationDetails = new AllocationDetails();
+				allocationDetails.setRequestId(rs.getString("requestId"));
+				allocationDetails.setAssetId(rs.getInt("assetId"));
+				allocationDetails.setEmployeeId(rs.getInt("empno"));
+				allocationDetails.setManagerId(rs.getInt("mgr"));
+				allocationDetails.setStatus(rs.getString("status"));
+				allocationDetails.setRequirement(rs.getString("requirement"));
+
+				assetRequestList.add(allocationDetails);
+			}
+
+		} catch (SQLException e) {
+			myLog.error(e.getMessage());
+			e.printStackTrace();
+		}
+		return assetRequestList;
+	}
+
+	/* ****************************viewRequests***************************** */
+	/***********************************************************
+	 * Method Name: viewRequests 
+	 * Return type: List of objects of AllocationDetails
+	 * Parameters: object of AllocationDetails
+	 * AllocationDetails Description:This method set status as deny. 
+	 * 
+	 * @author Amar
+	 ***********************************************************/
+	@Override
+	public List<AllocationDetails> viewRequests() {
+		myLog.info("View Requests raised details");
+
+		String sql = "SELECT requestId,assetId,empno,mgr,status,requirement,userId FROM asset_request";
+		Connection connection = null;
+		Statement st = null;
+		ResultSet rs = null;
+		AllocationDetails allocationDetails = null;
+		List<AllocationDetails> assetRequestList = new ArrayList<AllocationDetails>();
+
+		try {
+			connection = DBUtil.getConnection();
+			st = connection.createStatement();
+
+			rs = st.executeQuery(sql);
+			myLog.info("Select query fired to view request raised");
+
+			while (rs.next()) {
+				allocationDetails = new AllocationDetails();
+				allocationDetails.setRequestId(rs.getString("requestId"));
+				allocationDetails.setAssetId(rs.getInt("assetId"));
+				allocationDetails.setEmployeeId(rs.getInt("empno"));
+				allocationDetails.setManagerId(rs.getInt("mgr"));
+				allocationDetails.setStatus(rs.getString("status"));
+				allocationDetails.setRequirement(rs.getString("requirement"));
+				allocationDetails.setUserId(rs.getString("userId"));
+
+				assetRequestList.add(allocationDetails);
+			}
+
+		} catch (SQLException e) {
+			myLog.error(e.getMessage());
+			e.printStackTrace();
+		}
+		return assetRequestList;
+	}
+
+	/* ****************************getEmployeeById***************************** */
+	/***********************************************************
+	 * Method Name: getEmployeeById Return type: object of type Employee Parameters:
+	 * Integer Description:This method returns object of Employee based on argument
+	 * passed as employee Id
+	 * 
+	 * @author pshandi1
+	 ***********************************************************/
+	@Override
+	public Employee getEmployeeById(int employeeId) {
+		myLog.info("View particular employee by Id");
+
+		String sql1 = "SELECT ename,job,hiredate,deptId FROM Employee WHERE empno = ?";
+		String sql2 = "SELECT dept_name FROM department_master WHERE deptId = ?";
+		Connection connection = null;
+		PreparedStatement pst1 = null;
+		PreparedStatement pst2 = null;
+		ResultSet rs1 = null;
+		ResultSet rs2 = null;
+		Employee employee = null;
+		try {
+			connection = DBUtil.getConnection();
+			myLog.info("Display particular employee by Id"+employeeId);
+
+			pst1 = connection.prepareStatement(sql1);
+			pst1.setInt(1, employeeId);
+			rs1 = pst1.executeQuery();
+			myLog.info("Select query fired to get employee by  given Id");
+
+			if (rs1.next()) {
+				employee = new Employee();
+				employee.setEmpNo(employeeId);
+				employee.setEmpName(rs1.getString("ename"));
+				employee.setDesignation(rs1.getString("job"));
+				employee.setHireDate(rs1.getDate("hiredate").toLocalDate());
+				employee.setDepartmentId(rs1.getInt("deptId"));
+
+				pst2 = connection.prepareStatement(sql2);
+				pst2.setInt(1, employee.getDepartmentId());
+				rs2 = pst2.executeQuery();
+				if (rs2.next()) {
+					employee.setDepartmentName(rs2.getString("dept_name"));
+				}
+			}
+
+		} catch (SQLException e) {
+			myLog.error(e.getMessage());
+			e.printStackTrace();
+		}
+		return employee;
+	}
+
+	/***********************************************************
+	 * Method Name: getAdminById Return type: object of type Employee Parameters:
+	 * Integer Description:This method returns object of Employee based on argument
+	 * passed as user Id
+	 * 
+	 * @author pshandi1
+	 ***********************************************************/
+	@Override
+	public Employee getAdminById(String userId) {
+		myLog.info("View Admin by Id");
+
+		String sql1 = "SELECT ename,job,hiredate,deptId FROM Employee WHERE empno = ?";
+		String sql2 = "SELECT dept_name FROM department_master WHERE deptId = ?";
+		String sql3 = "SELECT empno FROM user_master WHERE userId = ?";
+		Connection connection = null;
+		PreparedStatement pst1 = null;
+		PreparedStatement pst2 = null;
+		PreparedStatement pst3 = null;
+		ResultSet rs1 = null;
+		ResultSet rs2 = null;
+		ResultSet rs3 = null;
+		Employee employee = null;
+		try {
+			connection = DBUtil.getConnection();
+			myLog.info("Display particular admin by Id"+userId);
+
+			pst3 = connection.prepareStatement(sql3);
+			pst3.setString(1, userId);
+			rs3 = pst3.executeQuery();
+			if (rs3.next()) {
+				int employeeId = rs3.getInt("empno");
+				pst1 = connection.prepareStatement(sql1);
+				pst1.setInt(1, employeeId);
+				rs1 = pst1.executeQuery();
+				if (rs1.next()) {
+					employee = new Employee();
+					employee.setEmpNo(employeeId);
+					employee.setEmpName(rs1.getString("ename"));
+					employee.setDesignation(rs1.getString("job"));
+					employee.setHireDate(rs1.getDate("hiredate").toLocalDate());
+					employee.setDepartmentId(rs1.getInt("deptId"));
+
+					pst2 = connection.prepareStatement(sql2);
+					pst2.setInt(1, employee.getDepartmentId());
+					rs2 = pst2.executeQuery();
+					myLog.info("Select query fired to display admin by Id");
+
+					if (rs2.next()) {
+						employee.setDepartmentName(rs2.getString("dept_name"));
+					}
+				}
+			}
+
+		} catch (SQLException e) {
+			myLog.error(e.getMessage());
+			e.printStackTrace();
+		}
+		return employee;
+	}
+}

@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Add Asset</title>
+		<link href="add_asset.css" REL="stylesheet" type="text/css"/>
+		<link href="style1.css" REL="stylesheet" type="text/css"/>
+		<script src="add_asset.js" type="text/javascript"></script>
+	</head>
+	<body bgcolor="#dddddd" align="center">
+	<br><br>
+		<br>
+		<img src="addasset.png" height="40px" width="250px"/>
+		<br>
+		<hr>
+		<form>
+		<fieldset>
+		<table align="center" cellspacing="10px" cellpadding="0px">
+			<tr>
+				<td>Asset Id</td>
+				<td><input id="inid" type="number" name="assetId" required></td>
+				<td>Asset Name</td>
+				<td><input id="inname" type="text" name="assetName" required></td>
+			</tr>
+			<tr>
+				<td>Order Id</td>
+				<td><input id="in" type="number" name="orderId" required></td>
+				<td>Order Date</td>
+				<td><input id="in" type="date" name="" required></td>
+				
+			</tr>
+			<tr>
+				<td>Purchase Date</td>
+				<td><input id="in" type="date" name="" required></td>
+				<td>Purchase Price</td>
+				<td><input id="in" type="number" name="" required></td>
+			</tr>
+			<tr>
+				<td>Asset Type</td>
+				<td><input type="radio" id="rit" name="atype" value="it" onchange="getCatIt()">IT<input type="radio" id="rnit" name="atype" value="nit" onchange="getCatNIt()">Non-IT</td>
+				<td>Category</td>
+				<td><select name="category" id="sel">
+						<option>SELECT</option>
+						</select>
+				</td>
+			</tr>
+			<tr>
+				<td>Description</td>
+				<td colspan="3"><textarea id="desc" width="50px" height="20px" required></textarea></td>
+			</tr>
+		</table>
+			<input id="sub" class="btn btn-1 btn-1a" type="submit" value="ADD ASSET"><input id="sub" class="btn btn-1 btn-1a" type="reset" value="RESET">
+		</fieldset>
+		</form>	
+		<br>
+		<hr>
+	</body>
+</html>	

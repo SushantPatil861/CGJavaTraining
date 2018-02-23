@@ -1,0 +1,24 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>AdminMain</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="w3.css">
+<body>
+<header>
+<iframe src="pages/header_page.html"  name="header" width="100%"style="height:12%"></iframe>
+</header>
+<div class="w3-row">
+<div class="w3-col" style="width:20%">
+<iframe src="pages/admin_menu.html" name="sidemenu"  width="100%" style="height:88%"></iframe>
+</div>
+<div class="w3-col" style="width:80%">
+<iframe src=""  name="content"  width="100%"style="height:88%"></iframe>
+</div>
+</div>
+<footer class="w3-container w3-grey" style="text-align:right">
+Copyright&copy; All rights reserved&reg;
+</footer>
+</body>
+</html>

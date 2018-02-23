@@ -1,0 +1,13 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Manager Access</title>
+<link href="frameOne.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<a href="managerHome.html" target="second">Home</a><br/><br/><br/>
+<a href="assetRequest.html" target="second">Request Asset</a><br/><br/><br/>
+<a href="" target="second">View Status</a><br/><br/><br/>
+<a href="" target="second">Log Out</a><br/><br/><br/>
+</body>
+</html>
